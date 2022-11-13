@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BossAbilities.src.Abilities
 {
 
-    public class Flower : BossAbility
+    /*public class Flower : BossAbility
     {
         static Sprite getActiveSprite() { return Satchel.AssemblyUtils.GetSpriteFromResources("flower.png"); }
         static Sprite getInactiveSprite() { return Satchel.AssemblyUtils.GetSpriteFromResources("flower.png"); }
@@ -34,7 +34,7 @@ namespace BossAbilities.src.Abilities
             
         }
 
-        public override void Hooks()
+        public override void Initialize()
         {
             #region Defining GOs
             flower = new GameObject()
@@ -82,5 +82,5 @@ namespace BossAbilities.src.Abilities
         public override void Contact(GameObject other) => plantFlower();
         public override void Complete(bool wasCancelled) => plantFlower();
 
-    }
+    }*/
 }

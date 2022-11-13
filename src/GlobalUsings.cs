@@ -1,6 +1,11 @@
-﻿global using System;
+﻿global using Modding;
 global using Satchel;
-global using UnityEngine;
-global using AbilityChanger;
+global using Satchel.Futils;
+global using Satchel.Reflected;
+global using System;
 global using System.Collections.Generic;
-global using System.Reflection;
+global using System.Linq;
+global using UnityEngine;
+global using static Satchel.GameObjectUtils;
+global using HutongGames.PlayMaker;
+global using static Modding.Logger;

@@ -17,7 +17,7 @@ namespace BossAbilities {
 
         public bool ToggleButtonInsideMenu => true;
 
-        // @TODO: have abilities declare the preloads they need and collect them here
+
         public override List<(string, string)> GetPreloadNames()
         {
             List<(string, string)> prefabs = new();
@@ -29,6 +29,7 @@ namespace BossAbilities {
                     Abilities.Add(Activator.CreateInstance(type) as BossAbility);
                     foreach(var name in Abilities[Abilities.Count-1].prefabs)
                     {
+                        if(name.Item1 is not null && name.Item2 is not null && !prefabs.Contains(name))
                         prefabs.Add(name);
                     }
                 }
@@ -38,21 +39,39 @@ namespace BossAbilities {
 
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects) {
-            Preloads = preloadedObjects;
-            LoadAbilities();
+            
+            
             instance= this;
+            Preloads = preloadedObjects;
+            
+            foreach (var name in Preloads.Values)
+            {
+                Log(name);
+            }
+            LoadAbilities();
+
 
         }
 
         private void LoadAbilities() {
             foreach (BossAbility ability in Abilities) {
-                RegisterAbility(ability.abilityReplaced, ability);
-                Log($"Registered ability {ability.name}!");
-                ability.Hooks();
-                Log($"Hooked Ability {ability.name}");
+
+                try
+                {
+                    RegisterAbility(ability.abilityReplaced, ability);
+                    Log($"Registered ability {ability.name}!");
+                } 
+
+                catch { Log($"Error on registering {ability.name}!"); }
+
+                try
+                {
+                    ability.Initialize();
+                    Log($"Initialized Ability {ability.name}");
+                }
+                catch { Log($"Error on Initializing {ability.name}"); }
             }
         }
-
         public List<IMenuMod.MenuEntry> GetMenuData(IMenuMod.MenuEntry? toggleButtonEntry)
         {
             List<IMenuMod.MenuEntry> entries = new();
@@ -67,14 +86,14 @@ namespace BossAbilities {
                             "Off",
                             "On"
                         },
-                        Saver = opt => ability.canUse = opt switch
+                        Saver = opt => ability.gotAbility = opt switch
                         {
                             0 => false,
                             1 => true,
                             // This should never be called
                             _ => throw new InvalidOperationException()
                         },
-                        Loader = () => ability.canUse switch
+                        Loader = () => ability.gotAbility switch
                         {
                             false => 0,
                             true => 1,
